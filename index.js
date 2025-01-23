@@ -59,8 +59,13 @@ async function fetchSubmissions() {
   );
 
   const submissions = response.data.submissions_dump || [];
+
+  const acceptedSubmissions = submissions.filter(
+    (submission) => submission.status_display === "Accepted"
+  );
+
   const submissionsWithDifficulty = await Promise.all(
-    submissions.map(async (submission) => {
+    acceptedSubmissions.map(async (submission) => {
       const difficulty = await fetchDifficulty(submission.title_slug);
       return {
         id: submission.id,
