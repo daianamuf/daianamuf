@@ -66,13 +66,16 @@ async function fetchSubmissions() {
 
   const submissionsWithDifficulty = await Promise.all(
     acceptedSubmissions.map(async (submission) => {
-      const difficulty = await fetchDifficulty(submission.title_slug);
+      const { difficulty, topicTags } = await fetchDifficulty(
+        submission.title_slug
+      );
       return {
         id: submission.id,
         title: submission.title,
         title_slug: submission.title_slug,
         lang: submission.lang,
         difficulty,
+        topicTags,
         url: submission.url,
       };
     })
@@ -87,6 +90,9 @@ async function fetchDifficulty(titleSlug) {
       question(titleSlug: $titleSlug) {
         title
         difficulty
+        topicTags {
+        name
+        }
       }
     }
   `;
@@ -104,10 +110,14 @@ async function fetchDifficulty(titleSlug) {
       }
     );
 
-    return response.data.data.question.difficulty;
+    const question = response.data.data.question;
+    const difficulty = question.difficulty;
+    const topicTags = question.topicTags.map((tag) => tag.name);
+
+    return { difficulty, topicTags };
   } catch (error) {
     console.error(`Error fetching difficulty for ${titleSlug}:`, error.message);
-    return "Unknown";
+    return { difficulty: "Unknown", topicTags: [] };
   }
 }
 

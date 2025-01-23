@@ -19,12 +19,14 @@ Hi! Here are my LeetCode stats and submissions.
 | Hard       | ${stats.hard} |
 
 ## Recent Submissions
-| Title                                      | Difficulty | Language    | 
-|--------------------------------------------|------------|-------------|
+| Title                                      | Difficulty | Language    | Topics                         |
+|--------------------------------------------|------------|-------------|--------------------------------|
 ${submissions
   .map(
     (sub) =>
-      `| [${sub.title}](https://leetcode.com/problems/${sub.title_slug}/) | ${sub.difficulty} | ${sub.lang} `
+      `| [${sub.title}](https://leetcode.com/problems/${sub.title_slug}/) | ${
+        sub.difficulty
+      } | ${sub.lang} | ${sub.topicTags.join(", ")} `
   )
   .join("\n")}
 
